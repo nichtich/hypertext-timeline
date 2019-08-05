@@ -23,4 +23,14 @@ Contributions are welcome! Please directly edit Wikidata or comment [via GitHub 
 * [The Historic Hypertext Project](https://human.iisys.de/hist_HT/)
 * http://histropedia.com/ (another application to create timelines from Wikidata)
 
+## Publications in Wikidata
+
+Publications about hypertext systems should be added to Wikidata (WikiCite) for referencing and to build a bibliography. The data can best be visualized with [Scholia]. Examples:
+
+* topic [Hypertext](https://tools.wmflabs.org/scholia/topic/Q93241)
+* topic [History of Hypertext](https://tools.wmflabs.org/scholia/topic/Q5867993)
+* author [Ted Nelson](https://tools.wmflabs.org/scholia/author/Q62852)
+* series [ACM HT conference proceedings](https://tools.wmflabs.org/scholia/series/Q27726666)
+
+[Scholia]: https://www.wikidata.org/wiki/Wikidata:Scholia
 [hypertext system]: https://www.wikidata.org/wiki/Q65966993
