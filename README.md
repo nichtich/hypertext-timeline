@@ -6,8 +6,6 @@ This repository contains sources and scripts of a **Timeline of Hypertext System
 
 Information about Hypertext Systems is collected from sources and entered into the [Wikidata knowledge base](https://www.wikidata.org/). A SPARQL query is used to collect back the basic information from Wikidata and the information is visualized in HTML with Javascript.
 
-*[direct link to the current timeline](https://w.wiki/6nZ)*
-
 ## Tasks
 
 * Collect information about Hypertext Systems and adding it to Wikidata
