@@ -6,12 +6,6 @@ This repository contains sources and scripts of a **Timeline of Hypertext System
 
 Information about Hypertext Systems is collected from sources and entered into the [Wikidata knowledge base](https://www.wikidata.org/). A SPARQL query is used to collect back the basic information from Wikidata and the information is visualized in HTML with Javascript.
 
-## Tasks
-
-* Collect information about Hypertext Systems and adding it to Wikidata
-* Add references to source statements
-* Polish timeline design (SPARQL + JavaScript)
-
 ## Contribution
 
 Contributions are welcome! Please directly edit Wikidata or comment [via GitHub issues](https://github.com/nichtich/hypertext-timeline/issues)!
@@ -20,6 +14,7 @@ Contributions are welcome! Please directly edit Wikidata or comment [via GitHub 
 
 * [The Historic Hypertext Project](https://human.iisys.de/hist_HT/)
 * http://histropedia.com/ (another application to create timelines from Wikidata)
+* The image shown when a link to <https://github.com/nichtich/hypertext-timeline> is shared on social media is [page 1 of Ted Nelson's Workshop in new hyperstructures](https://iiif.archivelab.org/iiif/workshopinnewhyp00nels$3) (see <https://archive.org/details/workshopinnewhyp00nels/page/1>)
 
 ## Publications in Wikidata
 
