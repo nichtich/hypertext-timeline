@@ -1,0 +1,27 @@
+#defaultView:Graph
+SELECT ?item ?itemLabel ?image ?linkTo WHERE {
+  
+  { { ?item wdt:P31 wd:Q65966993 } UNION { ?item wdt:P279 wd:Q65966993 } }
+  OPTIONAL { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } } 
+  FILTER NOT EXISTS {
+    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } }
+    FILTER (?date > ?date2)
+  }
+  
+  OPTIONAL { 
+    { { ?linkTo wdt:P155 ?item } UNION { ?linkTo wdt:P941 ?item } UNION { ?linkTo wdt:P144 ?item } 
+      UNION { ?linkTo wdt:P737 ?item } 
+    }
+    { { ?linkTo wdt:P31 wd:Q65966993 } UNION { ?linkTo wdt:P279 wd:Q65966993 } }
+  }
+  
+  OPTIONAL { ?item wdt:P18 ?image }
+  
+  OPTIONAL { ?item wdt:P1813 ?short } .
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "en" .
+    ?item rdfs:label ?label .
+  } .
+  BIND(CONCAT(IF(BOUND(?short),?short,?label),": ", STR(YEAR(?date))) AS ?itemLabel) .
+
+}
