@@ -1,70 +1,57 @@
+<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Timeline of Hypertext Systems</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <style>
-html, body { height: 100%; width: 100%; position: fixed; }
-#iframe { height: 100%; width: 99%; }
+html, body { height: 100%; width: 100%; }
+#iframe { height: 100%; width: 100%; }
   </style>
 </head>
 <body>
-<p>
-  This <b>timeline of hypertext systems</b> 
-  is generated from Wikidata via <a href="#" id="querylink">a SPARQL query</a>.
-  See <a href="https://github.com/nichtich/hypertext-timeline#readme">this git repository</a>
-  for background and feedback.
-</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Hypertext Systems</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbar-content" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-collapse collapse" id="navbar-content">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Timeline</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="sparql">SPARQL</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/nichtich/hypertext-timeline#readme">Background & Sources</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 <iframe id="iframe" frameborder="0"></iframe>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+        integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+        crossorigin="anonymous"></script>
+<script>
+$(function() {
+
+  var proto = window.location.protocol
+  var queryBase = (proto == "file:" ? "https:" : proto) + "//query.wikidata.org/"
+
+  $.get("timeline.sparql", function(query) {
+    var sparql = encodeURIComponent(query)
+    $("#sparql").attr("href", queryBase + "#" + sparql)
+    $("#iframe").attr("src", queryBase + "embed.html#" + sparql)
+  }, "text")
+})
+</script>
 </body>
 </html>
-<script type="application/sparql-query" id="sparql">
-#defaultView:Timeline
-SELECT DISTINCT
-  ?item ?date
-  (GROUP_CONCAT(DISTINCT ?name;separator="/") AS ?itemLabel)
-  (SAMPLE(?image) AS ?image)
-  (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
-WHERE 
-{
-  { 
-   { ?item wdt:P31 wd:Q65966993 }  # direct instances of hypertext systems
-   UNION
-   { ?item wdt:P279 wd:Q65966993 } # specific types of hypertext systems
-  }
-  
-  # get the first date
-  OPTIONAL {
-    { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date }
-  }
-  filter not exists {
-    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } }
-    filter (?date > ?date2)
-  } 
-  
-  # all kinds of creators
-  OPTIONAL { 
-    { ?item wdt:P50 ?creator } UNION  # author
-    { ?item wdt:P170 ?creator } UNION # creator
-    { ?item wdt:P61 ?creator } UNION  # discoverer or inventor
-    { ?item wdt:P178 ?creator }       # developer
-  }
-  
-  # image
-  OPTIONAL { ?item wdt:P18 ?image } .
-  
-  # name(s)
-  OPTIONAL { ?item wdt:P1813 ?short } .
-  SERVICE wikibase:label {
-    bd:serviceParam wikibase:language "en" .
-    ?item rdfs:label ?label .
-    ?creator rdfs:label ?creatorLabel .
-  } .
-  BIND(IF(BOUND(?short),?short,?label) AS ?name) .
-} GROUP BY ?item ?date
-ORDER BY ?date
-</script>
-<script>
-var sparql = encodeURIComponent(document.getElementById("sparql").text)
-document.getElementById("querylink").setAttribute("href", "//query.wikidata.org/#" + sparql)
-document.getElementById("iframe").setAttribute("src", "//query.wikidata.org/embed.html#" + sparql)
-</script>
 

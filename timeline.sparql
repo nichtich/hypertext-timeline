@@ -1,0 +1,45 @@
+#defaultView:Timeline
+SELECT DISTINCT
+  ?item ?date
+  (GROUP_CONCAT(DISTINCT ?name;separator="/") AS ?itemLabel)
+  (SAMPLE(?image) AS ?image)
+  (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
+WHERE 
+{
+  { 
+   { ?item wdt:P31 wd:Q65966993 }  # direct instances of hypertext systems
+   UNION
+   { ?item wdt:P279 wd:Q65966993 } # specific types of hypertext systems
+  }
+  
+  # get the first date
+  OPTIONAL {
+    { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date }
+  }
+  filter not exists {
+    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } }
+    filter (?date > ?date2)
+  } 
+  
+  # all kinds of creators
+  OPTIONAL { 
+    { ?item wdt:P50 ?creator } UNION  # author
+    { ?item wdt:P170 ?creator } UNION # creator
+    { ?item wdt:P61 ?creator } UNION  # discoverer or inventor
+    { ?item wdt:P178 ?creator }       # developer
+  }
+  
+  # image
+  OPTIONAL { ?item wdt:P18 ?image } .
+  
+  # name(s)
+  OPTIONAL { ?item wdt:P1813 ?short } .
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "en" .
+    ?item rdfs:label ?label .
+    ?creator rdfs:label ?creatorLabel .
+  } .
+  BIND(IF(BOUND(?short),?short,?label) AS ?name) .
+} GROUP BY ?item ?date
+ORDER BY ?date
+
