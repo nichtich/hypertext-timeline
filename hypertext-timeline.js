@@ -16,7 +16,11 @@ $(function() {
     $("#sparql").attr("href", queryBase + "#" + query)
   }
 
-  ;["timeline", "traces"].forEach(function(name, index) {
+  ;["timeline", "traces", "people"].forEach(function(name, index) {
+    var a = $('<a>').addClass("nav-link disabled")
+    a.text(name.charAt(0).toUpperCase() + name.slice(1))
+    $('<li class="nav-item">').attr('id', name).append(a).appendTo('#menu')
+
     $.get(name +".sparql", function(sparql) {
       sparqlQueries[name] = sparql
 
@@ -24,9 +28,8 @@ $(function() {
       iframe.attr("id","iframe-"+name)
       iframe.appendTo($("#iframes"))
 
-      var a = $('<a class="nav-link">').text(name.charAt(0).toUpperCase() + name.slice(1))
       a.click(function(){ selectMenu(name) })
-      $('<li class="nav-item">').attr('id', name).append(a).appendTo('#menu')
+      a.removeClass("disabled")
 
       if(!index) selectMenu(name)
     }, "text")

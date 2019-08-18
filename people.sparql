@@ -1,0 +1,32 @@
+#defaultView:ImageGrid
+SELECT
+  ?person ?personLabel ?personDescription ?image
+  (GROUP_CONCAT(DISTINCT ?systemName;separator=", ") AS ?systems)
+WITH {
+  
+  # people involved in hypertext systems
+  SELECT DISTINCT ?system ?person (SAMPLE(?image) AS ?image) WHERE {
+    { { ?system wdt:P31 wd:Q65966993 } UNION { ?system wdt:P279 wd:Q65966993 } }
+    {
+      { ?system wdt:P50 ?person } UNION
+      { ?system wdt:P170 ?person } UNION
+      { ?system wdt:P61 ?person } UNION
+      { ?system wdt:P178 ?person }
+      FILTER EXISTS { ?person wdt:P31 wd:Q5 }
+    }
+    OPTIONAL { ?person wdt:P18 ?image }
+  } GROUP BY ?person ?system
+} AS %people WHERE {
+  INCLUDE %people
+  
+  OPTIONAL { ?system wdt:P1813 ?short } .          
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "en" .
+    ?system rdfs:label ?systemLabel .
+    ?person rdfs:label ?personLabel .
+    ?person schema:description ?personDescription    
+  } .
+  BIND(IF(BOUND(?short),?short,?systemLabel) AS ?systemName) .
+  
+} GROUP BY ?person ?personLabel ?personDescription ?image
