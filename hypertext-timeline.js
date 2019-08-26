@@ -8,7 +8,10 @@ $(function() {
     "people": { sparql: null, html: null },
     "background": { html: null }
   }
-  var selectedMenuItem
+  var selectedMenuItem = window.location.hash
+  if (!(selectedMenuItem in menu)) {
+    selectedMenuItem = "timeline"
+  }
 
   function selectMenu(name) {
     const item = menu[name]
@@ -35,6 +38,8 @@ $(function() {
       }
       $("#sparql").attr("href", queryBase + "#" + query).show()
     }
+
+    window.location.hash = name
   }
 
   Object.keys(menu).forEach(function(name) {
@@ -54,7 +59,7 @@ $(function() {
         iframe.appendTo($("#iframes"))
         a.removeClass("disabled")
 
-        if (name == 'timeline') {
+        if (name == selectedMenuItem) {
           selectMenu(name)
         }
       }, "text")
@@ -62,7 +67,7 @@ $(function() {
     if ('html' in item) {
       $.get(name + ".html").done(function(html) {
         item.html = html
-        if (name == 'timeline') {
+        if (name == selectedMenuItem) {
           $("#description").html(html).show()
           $("#html").attr("href", githubBase + name + ".html").show()
         }
