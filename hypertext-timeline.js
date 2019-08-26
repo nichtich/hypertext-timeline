@@ -8,7 +8,7 @@ $(function() {
     "people": { sparql: null, html: null },
     "background": { html: null }
   }
-  var selectedMenuItem = window.location.hash
+  var selectedMenuItem = window.location.hash.substr(1)
   if (!(selectedMenuItem in menu)) {
     selectedMenuItem = "timeline"
   }
@@ -68,8 +68,7 @@ $(function() {
       $.get(name + ".html").done(function(html) {
         item.html = html
         if (name == selectedMenuItem) {
-          $("#description").html(html).show()
-          $("#html").attr("href", githubBase + name + ".html").show()
+          selectMenu(name)
         }
         a.removeClass("disabled")
       })
