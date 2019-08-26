@@ -14,10 +14,11 @@ WHERE
   
   # get the first date
   OPTIONAL {
-    { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date }
+    { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date }
+
   }
   filter not exists {
-    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } }
+    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } UNION { ?item wdt:P577 ?date2 } }
     filter (?date > ?date2)
   } 
   

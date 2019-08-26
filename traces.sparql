@@ -2,9 +2,9 @@
 SELECT ?item ?itemLabel ?image ?linkTo WHERE {
   
   { { ?item wdt:P31 wd:Q65966993 } UNION { ?item wdt:P279 wd:Q65966993 } }
-  OPTIONAL { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } } 
+  OPTIONAL { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date } }
   FILTER NOT EXISTS {
-    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } }
+    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } UNION { ?item wdt:P577 ?date2 } }
     FILTER (?date > ?date2)
   }
   
