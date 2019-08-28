@@ -4,6 +4,7 @@ $(function() {
 
   const menu = {
     "timeline": { sparql: null, html: null },
+    "table": { sparql: null, html: null },
     "traces": { sparql: null, html: null },
     "people": { sparql: null, html: null },
     "background": { html: null }

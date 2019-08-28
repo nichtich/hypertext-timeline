@@ -1,0 +1,46 @@
+#defaultView:Table
+SELECT DISTINCT ?year ?name ?creators ?wikidata {
+  
+{ SELECT DISTINCT
+    ?item
+    ?itemLabel
+    ?date
+    (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
+    (GROUP_CONCAT(DISTINCT ?short;separator="/") AS ?shortLabel)
+  WHERE 
+  {
+    # hypertext systems
+    { { ?item wdt:P31 wd:Q65966993 } UNION { ?item wdt:P279 wd:Q65966993 } }  
+    
+    # date of creation, publication etc.
+    { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date } }
+  
+    # all kinds of creators
+    OPTIONAL { 
+      { ?item wdt:P50 ?creator } UNION  # author
+      { ?item wdt:P170 ?creator } UNION # creator
+      { ?item wdt:P61 ?creator } UNION  # discoverer or inventor
+      { ?item wdt:P178 ?creator }       # developer
+    }
+    
+    # short name(s)
+    OPTIONAL { ?item wdt:P1813 ?short } .
+  
+    SERVICE wikibase:label {
+      bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
+      ?item rdfs:label ?itemLabel .
+      ?creator rdfs:label ?creatorLabel .
+    } .
+
+  } GROUP BY ?item ?itemLabel ?date }
+
+  FILTER NOT EXISTS {
+    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } UNION { ?item wdt:P577 ?date2 } }
+    FILTER (?date > ?date2)
+  } 
+  
+  BIND(IF(strlen(?shortLabel)>0,CONCAT(?itemLabel," (",?shortLabel,")"),?itemLabel) AS ?name)
+  BIND(YEAR(?date) AS ?year)
+  BIND(?item as ?wikidata)
+          
+} ORDER BY ?year
