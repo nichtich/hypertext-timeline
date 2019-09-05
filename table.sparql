@@ -1,10 +1,11 @@
 #defaultView:Table
-SELECT DISTINCT ?year ?name ?creators ?wikidata {
+SELECT DISTINCT ?year ?name ?creators ?system ?wikidata {
   
 { SELECT DISTINCT
     ?item
     ?itemLabel
     ?date
+    (GROUP_CONCAT(DISTINCT ?envLabel;separator=", ") AS ?system)
     (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
     (GROUP_CONCAT(DISTINCT ?short;separator="/") AS ?shortLabel)
   WHERE 
@@ -23,6 +24,12 @@ SELECT DISTINCT ?year ?name ?creators ?wikidata {
       { ?item wdt:P178 ?creator }       # developer
     }
     
+    # operating system, programming language
+    OPTIONAL {
+      { ?item wdt:P306 ?env } UNION
+      { ?item wdt:P277 ?env } 
+    }
+    
     # short name(s)
     OPTIONAL { ?item wdt:P1813 ?short } .
   
@@ -30,6 +37,7 @@ SELECT DISTINCT ?year ?name ?creators ?wikidata {
       bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
       ?item rdfs:label ?itemLabel .
       ?creator rdfs:label ?creatorLabel .
+      ?env rdfs:label ?envLabel .
     } .
 
   } GROUP BY ?item ?itemLabel ?date }
