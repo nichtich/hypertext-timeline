@@ -5,6 +5,7 @@ SELECT DISTINCT ?year ?name ?creators ?environments ?wikidata {
     ?item
     ?itemLabel
     ?date
+    ?end
     (GROUP_CONCAT(DISTINCT ?envLabel;separator=", ") AS ?environments)
     (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
     (GROUP_CONCAT(DISTINCT ?short;separator="/") AS ?shortLabel)
@@ -16,6 +17,9 @@ SELECT DISTINCT ?year ?name ?creators ?environments ?wikidata {
     # date of creation, publication etc.
     { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date } }
   
+    # end time
+    OPTIONAL { ?item wdt:P582 ?end }
+    
     # all kinds of creators
     OPTIONAL { 
       { ?item wdt:P50 ?creator } UNION  # author
@@ -42,7 +46,7 @@ SELECT DISTINCT ?year ?name ?creators ?environments ?wikidata {
       ?env rdfs:label ?envLabel .
     } .
 
-  } GROUP BY ?item ?itemLabel ?date }
+  } GROUP BY ?item ?itemLabel ?date ?end }
 
   FILTER NOT EXISTS {
     {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } UNION { ?item wdt:P577 ?date2 } }
@@ -50,7 +54,8 @@ SELECT DISTINCT ?year ?name ?creators ?environments ?wikidata {
   } 
   
   BIND(IF(strlen(?shortLabel)>0,CONCAT(?itemLabel," (",?shortLabel,")"),?itemLabel) AS ?name)
-  BIND(YEAR(?date) AS ?year)
+  
+  BIND(IF(BOUND(?end),CONCAT(STR(YEAR(?date)),"-",STR(YEAR(?end))),YEAR(?date)) AS ?year)
   BIND(?item as ?wikidata)
           
 } ORDER BY ?year
