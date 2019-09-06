@@ -55,7 +55,7 @@ SELECT DISTINCT ?year ?name ?creators ?environments ?wikidata {
   
   BIND(IF(strlen(?shortLabel)>0,CONCAT(?itemLabel," (",?shortLabel,")"),?itemLabel) AS ?name)
   
-  BIND(IF(BOUND(?end),CONCAT(STR(YEAR(?date)),"-",STR(YEAR(?end))),YEAR(?date)) AS ?year)
+  BIND(IF(BOUND(?end),CONCAT(STR(YEAR(?date)),"-",STR(YEAR(?end))),STR(YEAR(?date))) AS ?year)
   BIND(?item as ?wikidata)
           
 } ORDER BY ?year
