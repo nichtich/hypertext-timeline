@@ -27,5 +27,10 @@ Publications about hypertext systems should be added to Wikidata (WikiCite) for 
 * author [Ted Nelson](https://tools.wmflabs.org/scholia/author/Q62852)
 * series [ACM HT conference proceedings](https://tools.wmflabs.org/scholia/series/Q27726666)
 
+## Flyer
+
+Subdirectory `flyer` contains a `Makefile` to generate a flyer about the website (requires Pandoc, XeLaTeX, and Chrome). Call `make screenshots; make` to generate `flyer.pdf`. 
+
+
 [Scholia]: https://www.wikidata.org/wiki/Wikidata:Scholia
 [hypertext system]: https://www.wikidata.org/wiki/Q65966993

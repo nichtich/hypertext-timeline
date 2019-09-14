@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "wd": "wd"
+  },
+  "dependencies": {
+    "wikibase-cli": "0.0.0"
+  }
+}
