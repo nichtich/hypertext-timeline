@@ -11,6 +11,8 @@ header-includes:
   - '\setlength{\LTleft}{0pt}'              # reduce longtable margin
 ...
 
+**information about hypertext systems stored in the Wikidata knowledge graph**. Contributions are welcome!
+
 ![](about.png){width=50%}
 &nbsp;
 ![](timeline.png){width=50%}
@@ -19,6 +21,6 @@ header-includes:
 &nbsp;
 ![](people.png){width=50%}
 
-The website at <http://jakobvoss.de/hypertext-timeline/> (managed at <https://github.com/nichtich/hypertext-timeline/>) visualizes **information about hypertext systems stored in the Wikidata knowledge graph**. Contributions are welcome!
+Screenshots from <http://jakobvoss.de/hypertext-timeline/> (managed at <https://github.com/nichtich/hypertext-timeline/>)
 
 \pagebreak
