@@ -1,0 +1,62 @@
+#defaultView:Table
+SELECT DISTINCT ?year ?name ?creators ?ancestors ?wikidata {
+  
+{ SELECT DISTINCT
+    ?item
+    ?itemLabel
+    ?date
+    ?end
+    (GROUP_CONCAT(DISTINCT ?ancestorLabel;separator=", ") AS ?ancestors)
+    (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
+    (GROUP_CONCAT(DISTINCT ?short;separator="/") AS ?shortLabel)
+  WHERE 
+  {
+    # wiki engines
+    { ?item wdt:P31 wd:Q6686945 } 
+    
+    # date of creation, publication etc.
+    OPTIONAL { 
+      { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date } }
+  
+    # end time
+    OPTIONAL { ?item wdt:P582 ?end }
+    
+    # all kinds of creators
+    OPTIONAL { 
+      { ?item wdt:P50 ?creator } UNION  # author
+      { ?item wdt:P170 ?creator } UNION # creator
+      { ?item wdt:P61 ?creator } UNION  # discoverer or inventor
+      { ?item wdt:P178 ?creator }       # developer
+    }
+    OPTIONAL { ?item wdt:P2093 ?creatorLabel }
+    
+    OPTIONAL {
+      { ?item wdt:P155 ?ancestor } UNION 
+      { ?item wdt:P941 ?ancestor } UNION 
+      { ?item wdt:P144 ?ancestor } UNION 
+      { ?item wdt:P737 ?ancestor }       
+    }
+    
+    # short name(s)
+    OPTIONAL { ?item wdt:P1813 ?short } .
+  
+    SERVICE wikibase:label {
+      bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
+      ?item rdfs:label ?itemLabel .
+      ?creator rdfs:label ?creatorLabel .
+      ?ancestor rdfs:label ?ancestorLabel .
+    } .
+
+  } GROUP BY ?item ?itemLabel ?date ?end }
+
+  FILTER NOT EXISTS {
+    {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } UNION { ?item wdt:P577 ?date2 } }
+    FILTER (?date > ?date2)
+  } 
+  
+  BIND(IF(strlen(?shortLabel)>0,CONCAT(?itemLabel," (",?shortLabel,")"),?itemLabel) AS ?name)
+  
+  BIND(IF(BOUND(?end),CONCAT(STR(YEAR(?date)),"-",STR(YEAR(?end))),STR(YEAR(?date))) AS ?year)
+  BIND(?item as ?wikidata)
+          
+} ORDER BY DESC(?year)

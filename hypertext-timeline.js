@@ -6,6 +6,7 @@ $(function() {
     "table": { sparql: null, html: null },
     "timeline": { sparql: null, html: null },
     "traces": { sparql: null, html: null },
+    "wikis": { sparql: null, html: null },
     "people": { sparql: null, html: null },
     "about": { html: null }
   }
