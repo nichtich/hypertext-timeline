@@ -6,7 +6,9 @@ WITH {
   
   # people involved in hypertext systems
   SELECT DISTINCT ?system ?person (SAMPLE(?image) AS ?image) WHERE {
-    { { ?system wdt:P31 wd:Q65966993 } UNION { ?system wdt:P279 wd:Q65966993 } }
+    { { ?system wdt:P31 wd:Q65966993 } 
+      UNION { ?system wdt:P279 wd:Q65966993 }
+      UNION { ?system wdt:P31 wd:Q6686945 } }
     {
       { ?system wdt:P50 ?person } UNION
       { ?system wdt:P170 ?person } UNION
