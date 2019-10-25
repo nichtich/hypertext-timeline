@@ -1,27 +1,39 @@
 #defaultView:Graph
-SELECT ?item ?itemLabel ?image ?linkTo WHERE {
+SELECT ?item ?itemLabel ?image ?linkTo ?edgeLabel WHERE {
   
+  # hypertext systems
   { { ?item wdt:P31 wd:Q65966993 } UNION { ?item wdt:P279 wd:Q65966993 } }
-  OPTIONAL { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date } }
+  
+  # first date
+  OPTIONAL { { ?item wdt:P571 ?date } UNION { ?item wdt:P580 ?date } UNION { ?item wdt:P585 ?date } UNION { ?item wdt:P577 ?date } }  
   FILTER NOT EXISTS {
     {  { ?item wdt:P571 ?date2 } UNION { ?item wdt:P580 ?date2 } UNION { ?item wdt:P585 ?date2 } UNION { ?item wdt:P577 ?date2 } }
     FILTER (?date > ?date2)
   }
   
+  # links
   OPTIONAL { 
-    { { ?linkTo wdt:P155 ?item } UNION { ?linkTo wdt:P941 ?item } UNION { ?linkTo wdt:P144 ?item } 
-      UNION { ?linkTo wdt:P737 ?item } 
+    { 
+      { ?item wdt:P155 ?linkTo BIND(wd:P155 AS ?edge) } 
+      UNION 
+      { ?item wdt:P941 ?linkTo BIND(wd:P941 AS ?edge) } 
+      UNION 
+      { ?item wdt:P144 ?linkTo BIND(wd:P144 AS ?edge) } 
+      UNION 
+      { ?item wdt:P737 ?linkTo BIND(wd:P737 AS ?edge) } 
     }
+    
     { { ?linkTo wdt:P31 wd:Q65966993 } UNION { ?linkTo wdt:P279 wd:Q65966993 } }
   }
   
-  OPTIONAL { ?item wdt:P18 ?image }
+  # image and short name
+  OPTIONAL { ?item wdt:P18 ?image }  
+  OPTIONAL { ?item wdt:P1813 ?short }
   
-  OPTIONAL { ?item wdt:P1813 ?short } .
   SERVICE wikibase:label {
     bd:serviceParam wikibase:language "en" .
     ?item rdfs:label ?label .
+    ?edge rdfs:label ?edgeLabel .
   } .
   BIND(CONCAT(IF(BOUND(?short),?short,?label),": ", STR(YEAR(?date))) AS ?itemLabel) .
-
 }
