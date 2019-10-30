@@ -1,5 +1,5 @@
 #defaultView:Table
-SELECT DISTINCT ?year ?name ?creators ?ancestors ?wikidata {
+SELECT DISTINCT ?year ?name ?creators ?ancestors ?language ?wikidata {
   
 { SELECT DISTINCT
     ?item
@@ -9,6 +9,7 @@ SELECT DISTINCT ?year ?name ?creators ?ancestors ?wikidata {
     (GROUP_CONCAT(DISTINCT ?ancestorLabel;separator=", ") AS ?ancestors)
     (GROUP_CONCAT(DISTINCT ?creatorLabel;separator=", ") AS ?creators)
     (GROUP_CONCAT(DISTINCT ?short;separator="/") AS ?shortLabel)
+    (GROUP_CONCAT(DISTINCT ?systemLabel;separator=", ") AS ?language)
   WHERE 
   {
     # wiki engines
@@ -40,13 +41,18 @@ SELECT DISTINCT ?year ?name ?creators ?ancestors ?wikidata {
     # short name(s)
     OPTIONAL { ?item wdt:P1813 ?short } .
   
+    OPTIONAL { 
+      { ?item wdt:P277 ?system } 
+    }
+    
     SERVICE wikibase:label {
       bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" .
       ?item rdfs:label ?itemLabel .
       ?creator rdfs:label ?creatorLabel .
       ?ancestor rdfs:label ?ancestorLabel .
+      ?system rdfs:label ?systemLabel .
     } .
-
+    
   } GROUP BY ?item ?itemLabel ?date ?end }
 
   FILTER NOT EXISTS {
